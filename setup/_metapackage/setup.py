@@ -11,6 +11,7 @@ setuptools.setup(
         'odoo12-addon-auth_admin_passkey',
         'odoo12-addon-auth_api_key',
         'odoo12-addon-auth_from_http_remote_user',
+        'odoo12-addon-auth_keycloak',
         'odoo12-addon-auth_ldap_attribute_sync',
         'odoo12-addon-auth_ldaps',
         'odoo12-addon-auth_oauth_multi_token',
