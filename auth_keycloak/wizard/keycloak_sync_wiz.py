@@ -147,7 +147,7 @@ class KeycloakSyncWiz(models.TransientModel):
         keycloak_key, odoo_key = self.login_match_key.split(':')
         logins_mapping = {
             x[keycloak_key]: x
-            for x in users if x[keycloak_key]
+            for x in users if x.get(keycloak_key)
         }
         logins = list(logins_mapping.keys())
         # find matching odoo users
