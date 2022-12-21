@@ -250,6 +250,7 @@ class KeycloakCreateWiz(models.TransientModel):
         values.update({
             'firstName': firstname,
             'lastName': lastname,
+            'enabled': True,
         })
         logger.debug('CREATE using values %s' % str(values))
         return values
