@@ -51,5 +51,4 @@
     <field name="target">new</field>
     <field name="binding_model_id" ref="base.model_res_users" />
   </record>
-<!--    <field name="view_type">form</field> deep-->
 </odoo>

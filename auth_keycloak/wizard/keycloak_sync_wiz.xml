@@ -41,7 +41,6 @@
     <field name="view_id" ref="auth_keycloak_sync_wiz"/>
     <field name="target">new</field>
   </record>
-<!--    <field name="view_type">form</field> deep-->
 
 
 </odoo>

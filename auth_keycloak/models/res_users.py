@@ -47,7 +47,6 @@ class ResUsers(models.Model):
         return validation
 
 
-    # def button_push_to_keycloak(self, vals): deep
     def button_push_to_keycloak(self):
         """Quick action to push current users to Keycloak."""
         provider = self.env.ref(

@@ -8,6 +8,7 @@ import uuid
 
 import werkzeug.urls
 import werkzeug.utils
+from werkzeug.urls import url_encode
 
 from odoo.http import request
 
@@ -44,6 +45,6 @@ class OAuthLoginKeycloak(OAuthLogin):
             )
             provider['auth_link'] = "%s?%s" % (
                 provider['auth_endpoint'],
-                werkzeug.url_encode(params)
+                url_encode(params)
             )
         return providers
