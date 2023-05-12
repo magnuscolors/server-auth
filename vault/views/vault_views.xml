@@ -64,22 +64,12 @@
                     <group>
                         <field name="allowed_share" invisible="1" />
                         <field name="allowed_write" invisible="1" />
+                        <field name="allowed_create" invisible="1" />
                         <field name="allowed_delete" invisible="1" />
                         <field name="master_key" invisible="1" required="1" />
                         <field name="name" />
                         <field name="user_id" />
                         <field name="note" />
-
-                        <field
-                            name="field_ids"
-                            options="{'create': False, 'delete': False}"
-                            invisible="1"
-                        />
-                        <field
-                            name="file_ids"
-                            options="{'create': False, 'delete': False}"
-                            invisible="1"
-                        />
                     </group>
 
                     <notebook>

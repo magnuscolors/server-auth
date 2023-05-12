@@ -19,6 +19,8 @@ odoo.define("vault.share", function (require) {
     }
 
     document.getElementById("pin").onchange = async function () {
+        if (!utils.supported()) return;
+
         find_elements();
 
         // Derive the key from the pin
@@ -30,7 +32,7 @@ odoo.define("vault.share", function (require) {
 
         const secret = document.getElementById("secret");
         const secret_file = document.getElementById("secret_file");
-        if (!secret || !secret_file) return;
+        if (!secret && !secret_file) return;
 
         // There is no secret to decrypt
         if (!this.value) {
@@ -46,11 +48,17 @@ odoo.define("vault.share", function (require) {
         }
 
         if (data.encrypted_file) {
-            const content = await utils.sym_decrypt(key, data.encrypted_file, data.iv);
-            const file = new File([atob(content)], data.filename);
+            const content = atob(
+                await utils.sym_decrypt(key, data.encrypted_file, data.iv)
+            );
+            const buffer = new ArrayBuffer(content.length);
+            const arr = new Uint8Array(buffer);
+            for (let i = 0; i < content.length; i++) arr[i] = content.charCodeAt(i);
+            const file = new Blob([arr]);
             secret_file.text = data.filename;
             secret_file.setAttribute("href", window.URL.createObjectURL(file));
             secret_file.setAttribute("class", "alert alert-success col-12");
+            secret_file.setAttribute("download", data.filename);
         }
     };
 });
