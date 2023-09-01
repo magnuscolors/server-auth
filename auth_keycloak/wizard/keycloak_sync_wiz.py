@@ -79,8 +79,7 @@ class KeycloakSyncMixin(models.AbstractModel):
 
     def _get_token(self):
         """Retrieve auth token from Keycloak."""
-        url = self.provider_id.validation_endpoint.replace('/introspect', '')
-        logger.info('Calling %s' % url)
+        url = self.provider_id.token_endpoint
         headers = {'content-type': 'application/x-www-form-urlencoded'}
         data = {
             'username': self.user,
@@ -99,7 +98,6 @@ class KeycloakSyncMixin(models.AbstractModel):
         :param token: a valida auth token from Keycloak
         :param **params: extra search params for users endpoint
         """
-        logger.info('Calling %s' % self.endpoint)
         headers = {
             'Authorization': 'Bearer %s' % token,
         }
@@ -142,11 +140,10 @@ class KeycloakSyncWiz(models.TransientModel):
         4. update them w/ their own Keycloak ID
         5. get back to filtered list of updated users
         """
-        logger.info('Sync keycloak users START')
         self._validate_setup()
         token = self._get_token()
         users = self._get_users(token)
-        logger.info('Found %s Keycloak users' % len(users))
+
         # map users by match key
         keycloak_key, odoo_key = self.login_match_key.split(':')
         logins_mapping = {
@@ -156,7 +153,7 @@ class KeycloakSyncWiz(models.TransientModel):
         logins = list(logins_mapping.keys())
         # find matching odoo users
         odoo_users = self._get_odoo_users(logins)
-        logger.info('Matching %s Odoo users' % len(odoo_users))
+
         # update odoo users
         for user in odoo_users:
             # use `mapped` since we cann acces nested records
@@ -170,7 +167,6 @@ class KeycloakSyncWiz(models.TransientModel):
         # open users' tree view
         action = self.env.ref('base.action_res_users').read()[0]
         action['domain'] = [('id', 'in', odoo_users.ids)]
-        logger.info('Sync keycloak users STOP')
         return action
 
 
@@ -256,7 +252,6 @@ class KeycloakCreateWiz(models.TransientModel):
             'lastName': lastname,
             'enabled': True,
         })
-        logger.debug('CREATE using values %s' % str(values))
         return values
 
     def _split_user_fullname(self, odoo_user):
@@ -273,7 +268,6 @@ class KeycloakCreateWiz(models.TransientModel):
 
     def _create_user(self, token, **data):
         """Create a user on Keycloak w/ given data."""
-        logger.info('CREATE Calling %s' % self.endpoint)
         headers = {
             'Authorization': 'Bearer %s' % token,
         }
@@ -305,12 +299,8 @@ class KeycloakCreateWiz(models.TransientModel):
            b. they do not have an Oauth UID already
         4. brings you to update users list
         """
-        logger.debug('Create keycloak user START')
         self._validate_setup()
         token = self._get_token()
-        logger.info(
-            'Creating users for %s' % ','.join(self.user_ids.mapped('login'))
-        )
         for user in self.user_ids:
             if user.oauth_uid:
                 # already sync'ed somewhere else
@@ -327,5 +317,7 @@ class KeycloakCreateWiz(models.TransientModel):
 
         action = self.env.ref('base.action_res_users').read()[0]
         action['domain'] = [('id', 'in', self.user_ids.ids)]
-        logger.debug('Create keycloak users STOP')
+        logger.info(
+            'User created in keycloak for user: %s' % ','.join(self.user_ids.mapped('login'))
+        )
         return action

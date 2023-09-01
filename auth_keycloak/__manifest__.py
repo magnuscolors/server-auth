@@ -2,10 +2,10 @@
 {
     "name": "Keycloak Sync Users",
     "summary": "Integrate Keycloak into your SSO",
-    "version": "16.0.0.0.0",
+    "version": "16.0.1.0.0",
     'category': 'Tools',
     "website": "https://github.com/OCA/server-auth",
-    'author': 'Deep, The Open Source Company (TOSC), Camptocamp, Odoo Community Association (OCA)',
+    'author': 'Deepa, The Open Source Company (TOSC), Camptocamp, Odoo Community Association (OCA)',
     "license": "AGPL-3",
     "depends": [
         "auth_oauth", "auth_oidc"

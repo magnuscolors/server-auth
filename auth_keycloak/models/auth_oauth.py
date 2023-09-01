@@ -6,7 +6,6 @@ from odoo import fields, models, api
 class OAuthProvider(models.Model):
     _inherit = 'auth.oauth.provider'
 
-    # client_secret = fields.Char()
     users_endpoint = fields.Char(
         help='User endpoint',
         required=False,
