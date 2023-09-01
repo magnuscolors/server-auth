@@ -60,6 +60,7 @@ class WebsiteHome(WebsiteHome):
         """ Autologin, if website app is installed """
 
         if not request.session.uid:
-            return http.redirect_with_hash('/web/login')
+            # return http.redirect_with_hash('/web/login')
+            return request.redirect('/web/login')
 
         return super().index(**kw)
