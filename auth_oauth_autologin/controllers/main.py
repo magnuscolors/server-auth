@@ -8,6 +8,7 @@ from odoo import http, SUPERUSER_ID
 from odoo.addons.auth_oauth.controllers.main import OAuthLogin
 from odoo.addons.web.controllers.session import Session
 from odoo.addons.website.controllers.main import Website as WebsiteHome
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.http import request
 
 import logging
@@ -52,15 +53,31 @@ class SessionLogout(Session):
         redirect = '/logout'
         return super(SessionLogout, self).logout(redirect=redirect)
 
+# Open this block, if auto login needed on Index/Home page.
+# class WebsiteHome(WebsiteHome):
+#
+#     @http.route('/', type='http', auth="public", website=True, sitemap=True)
+#     def index(self, **kw):
+#         """ Autologin, if website app is installed """
+#
+#         if not request.session.uid:
+#             return request.redirect('/web/login')
+#
+#         return super().index(**kw)
 
-class WebsiteHome(WebsiteHome):
 
-    @http.route('/', type='http', auth="public", website=True, sitemap=True)
-    def index(self, **kw):
-        """ Autologin, if website app is installed """
+class WebsiteSale(WebsiteSale):
+
+    @http.route([
+        '/shop',
+        '/shop/page/<int:page>',
+        '/shop/category/<model("product.public.category"):category>',
+        '/shop/category/<model("product.public.category"):category>/page/<int:page>',
+    ], type='http', auth="public", website=True, sitemap=WebsiteSale.sitemap_shop)
+    def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, ppg=False, **post):
+        """ Autologin, if website_sale is installed """
 
         if not request.session.uid:
-            # return http.redirect_with_hash('/web/login')
             return request.redirect('/web/login')
 
-        return super().index(**kw)
+        return super().shop(self, page, category, search, min_price, max_price, ppg, **post)
