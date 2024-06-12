@@ -80,4 +80,4 @@ class WebsiteSale(WebsiteSale):
         if not request.session.uid:
             return request.redirect('/web/login')
 
-        return super().shop(self, page, category, search, min_price, max_price, ppg, **post)
+        return super().shop(page, category, search, min_price, max_price, ppg, **post)
